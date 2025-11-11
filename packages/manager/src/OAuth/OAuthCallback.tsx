@@ -15,6 +15,11 @@ import { clearStorageAndRedirectToLogout, handleOAuthCallback } from './oauth';
 export const OAuthCallback = () => {
   const navigate = useNavigate();
   const authenticate = async () => {
+    if ((window as any).oauthCallbackDone) {
+      return;
+    }
+    (window as any).oauthCallbackDone = true;
+
     try {
       const { returnTo } = await handleOAuthCallback({
         params: location.search,
