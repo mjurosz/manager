@@ -4,6 +4,8 @@ import { useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { SplashScreen } from 'src/components/SplashScreen';
+import { oauthContext } from 'src/context/oauthContext';
+import { useDialogContext } from 'src/context/useDialogContext';
 
 import { clearStorageAndRedirectToLogout, handleOAuthCallback } from './oauth';
 
@@ -21,6 +23,9 @@ export const OAuthCallback = () => {
     from: '/oauth/callback',
   });
 
+  const OAuthProvider = oauthContext.Provider;
+  const oauthContextValue = useDialogContext();
+
   const hasStartedAuth = React.useRef(false);
   const isAuthenticating = React.useRef(false);
 
@@ -34,6 +39,11 @@ export const OAuthCallback = () => {
     isAuthenticating.current = true;
 
     const authenticate = async () => {
+      if (oauthContextValue.isOpen) {
+        return;
+      }
+      oauthContextValue.open();
+
       try {
         const { returnTo } = await handleOAuthCallback({
           params: search,
