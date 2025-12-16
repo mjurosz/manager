@@ -34,6 +34,11 @@ export const OAuthCallback = () => {
     isAuthenticating.current = true;
 
     const authenticate = async () => {
+      if ((window as any).oauthCallbackDone) {
+        return;
+      }
+      (window as any).oauthCallbackDone = true;
+
       try {
         const { returnTo } = await handleOAuthCallback({
           params: search,
