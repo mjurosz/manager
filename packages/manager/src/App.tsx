@@ -15,26 +15,7 @@ import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 export const App = withDocumentTitleProvider(
   withFeatureFlagProvider(() => {
-    // Skip all initialization if we're on any authentication callback - just let the router handle it
-    const isAuthCallback =
-      window.location.pathname === '/oauth/callback' ||
-      window.location.pathname === '/admin/callback';
-
-    const { isLoading } = useInitialRequests();
-    const { areFeatureFlagsLoading } = useSetupFeatureFlags();
-
-    if (isAuthCallback) {
-      return (
-        <ErrorBoundaryFallback>
-          <DocumentTitleSegment segment="Akamai Cloud Manager" />
-          <Router />
-        </ErrorBoundaryFallback>
-      );
-    }
-
-    if (isLoading || areFeatureFlagsLoading) {
-      return <SplashScreen />;
-    }
+    useSetupFeatureFlags();
 
     return (
       <ErrorBoundaryFallback>
